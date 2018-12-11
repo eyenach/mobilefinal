@@ -90,14 +90,32 @@ public class LoginFragment extends Fragment {
         });
     }
 
-    void chkUser(){
-        cursor = db.rawQuery("SELECT * FROM user", null);
+    void chkUser() {
+        cursor = db.rawQuery("SELECT * FROM user WHERE user =" + _userStr + "", null);
+        String user = null;
+        String password = null;
+        String name = null;
 
-        while (cursor.moveToNext()){
-            String user = cursor.getString(0);
-            String name = cursor.getString(1);
-            String password = cursor.getString(3);
+        if (cursor.moveToNext() == false) {
+
+        } else {
+            cursor.moveToNext();
+            user = cursor.getString(0);
+            name = cursor.getString(1);
+            password = cursor.getString(3);
+
+            //set SharedPreference to chk Login
+            sharedPreferences.edit().putBoolean("login", true).commit();
+            sharedPreferences.edit().putString("name", name).commit();
+
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_view, new HomeFragment())
+                    .addToBackStack(null)
+                    .commit();
+            Log.d("LOGIN", "GOTO HOME");
+
         }
-
+    }
 
 }
